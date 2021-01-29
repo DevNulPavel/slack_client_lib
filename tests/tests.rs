@@ -52,17 +52,16 @@ async fn test_messages() {
     let client = build_client();
 
     client
-        .send_message("Test message", SlackUserMessageTarget::new("U0JU3ACSJ"))
+        .send_message("Test message\n - http://www.hyperlinkcode.com/ TEST link", SlackUserMessageTarget::new("U0JU3ACSJ"))
         .await
         .expect("Direct message failed");
-
+        
     let formatted_text = format!("*Jenkins bot error:*```{}```", "TEST");
     let mut message = client
         .send_message(&formatted_text, SlackUserMessageTarget::new("U0JU3ACSJ"))
         .await
         .expect("Formatted direct message failed")
         .expect("Direct message - message object does not exist");
-
 
     tokio::time::delay_for(std::time::Duration::from_secs(2)).await;
         

@@ -32,7 +32,11 @@ TEST:
 
 TEST_FIND_USER: 
 	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc) && \
-	cargo test -- tests::test_find_user
+	cargo test -- test_find_user
+
+TEST_MESSAGES: 
+	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc) && \
+	cargo test -- test_messages
 
 TEST_USERS_CACHE: 
 	export RUST_LOG=trace && \

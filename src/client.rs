@@ -295,7 +295,8 @@ impl SlackClient {
         // Наше сообщения
         let message_json = {
             let mut json = serde_json::json!({
-                "text": message
+                "text": message,
+                "unfurl_links": false
             });
             target.update_json(&mut json);
             json
