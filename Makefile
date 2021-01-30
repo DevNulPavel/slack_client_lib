@@ -38,6 +38,10 @@ TEST_MESSAGES:
 	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc) && \
 	cargo test -- test_messages
 
+TEST_FORMATTED_MESSAGE: 
+	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc) && \
+	cargo test -- test_formatted_message
+
 TEST_USERS_CACHE: 
 	export RUST_LOG=trace && \
 	export RUST_BACKTRACE=1 && \

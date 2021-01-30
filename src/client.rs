@@ -74,7 +74,7 @@ macro_rules! slack_message_target_impl {
             fn get_url(&$url_self) -> &str{
                 $url
             }
-            fn update_json(&$params_self, $params_val: &mut Value) {
+            fn update_target_json(&$params_self, $params_val: &mut Value) {
                 $params
             }
         }
@@ -105,7 +105,7 @@ impl SlackMessageTargetOutput for Option<Message> {
 pub trait SlackMessageTarget: Sized {
     type Output: SlackMessageTargetOutput;
     fn get_url(&self) -> &str;
-    fn update_json(&self, json: &mut Value);
+    fn update_target_json(&self, json: &mut Value);
 }
 
 // Сообщение в канал
@@ -288,17 +288,26 @@ impl SlackClient {
         }
     }
 
-    pub async fn send_message<T: SlackMessageTarget>(&self, message: &str, target: T) -> Result<T::Output, SlackError> {
+    pub async fn send_message<'a, T: SlackMessageTarget>(&'a self, message: &str, target: T) -> Result<T::Output, SlackError> {
+        let json = serde_json::json!({
+            "text": message,
+            "unfurl_links": false
+        });
+        self.send_message_custom(json, target).await
+    }
+
+    pub async fn send_message_custom<T: SlackMessageTarget>(&self, mut json: Value, target: T) -> Result<T::Output, SlackError> {
         // https://api.slack.com/messaging/sending
         // https://api.slack.com/methods/chat.postMessage
+        // https://api.slack.com/reference/surfaces/formatting
+        // https://api.slack.com/start/planning/guidelines#messaging
+        // Блоки: https://api.slack.com/reference/block-kit
+        // Аттачменты: https://api.slack.com/messaging/composing/layouts
+        // Предпросмотр форматирования: https://api.slack.com/docs/messages/builder
 
         // Наше сообщения
         let message_json = {
-            let mut json = serde_json::json!({
-                "text": message,
-                "unfurl_links": false
-            });
-            target.update_json(&mut json);
+            target.update_target_json(&mut json);
             json
         };
 

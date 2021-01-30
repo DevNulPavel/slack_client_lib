@@ -6,7 +6,9 @@ use std::{
         Path
     }
 };
-
+use serde_json::{
+    json
+};
 use reqwest::{
     Client
 };
@@ -44,6 +46,82 @@ fn build_client() -> SlackClient{
     client
 }
 
+#[tokio::test]
+async fn test_formatted_message() {
+    setup_logs();
+
+    let client = build_client();
+
+    // https://api.slack.com/methods/chat.postMessage
+    // https://api.slack.com/reference/block-kit
+    // https://api.slack.com/messaging/composing/layouts#attachments
+    let message_json = json!({
+        "text": "Test text",
+        "unfurl_links": false,
+        "attachments": [
+            {
+                "fallback": "Required plain-text summary of the attachment.",
+                "color": "#36a64f",
+                "pretext": "Optional text that appears above the attachment block",
+                "author_name": "Bobby Tables",
+                "author_link": "http://flickr.com/bobby/",
+                "author_icon": "http://flickr.com/icons/bobby.jpg",
+                "title": "Slack API Documentation",
+                "title_link": "https://api.slack.com/",
+                "text": "Optional text that appears within the attachment",
+                "fields": [
+                    {
+                        "title": "Priority",
+                        "value": "High",
+                        "short": false
+                    }
+                ],
+                "image_url": "http://my-website.com/path/to/image.jpg",
+                "thumb_url": "http://example.com/path/to/thumb.png",
+                "footer": "Slack API",
+                "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+                "ts": 123456789
+            }
+        ],
+        "blocks": [
+            {
+                "type": "header",
+                "text": {
+                    "type": "plain_text",
+                    "text": "Test header"
+                }
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "section", 
+                "text": {
+                    "type": "mrkdwn", 
+                    "text": "Test block text"
+                }
+            },
+            {
+                "type": "context",
+                "elements": [
+                    {
+                        "type": "image",
+                        "image_url": "https://image.freepik.com/free-photo/red-drawing-pin_1156-445.jpg",
+                        "alt_text": "images"
+                    },
+                    {
+                        "type": "mrkdwn",
+                        "text": "Location: **Dogpatch**"
+                    }
+                ]
+            }
+        ]
+    });
+    client
+        .send_message_custom(message_json, SlackUserMessageTarget::new("U0JU3ACSJ"))
+        .await
+        .expect("Direct message failed");
+}
 
 #[tokio::test]
 async fn test_messages() {
@@ -56,6 +134,23 @@ async fn test_messages() {
         .await
         .expect("Direct message failed");
         
+    // https://api.slack.com/methods/chat.postMessage
+    let message_json = json!({
+        "blocks": [
+            {
+                "type": "section", 
+                "text": {
+                    "type": "plain_text", 
+                    "text": "Hello world"
+                }
+            }
+        ]
+    });
+    client
+        .send_message_custom(message_json, SlackUserMessageTarget::new("U0JU3ACSJ"))
+        .await
+        .expect("Direct message failed");
+
     let formatted_text = format!("*Jenkins bot error:*```{}```", "TEST");
     let mut message = client
         .send_message(&formatted_text, SlackUserMessageTarget::new("U0JU3ACSJ"))
