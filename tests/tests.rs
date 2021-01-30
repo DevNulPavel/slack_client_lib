@@ -58,6 +58,63 @@ async fn test_formatted_message() {
     let message_json = json!({
         "text": "Test text",
         "unfurl_links": false,
+        "blocks": [
+            {
+                "type": "header",
+                "text": {
+                    "type": "plain_text",
+                    "text": "Test header"
+                }
+            },
+            {
+                "type": "section", 
+                "text": {
+                    "type": "mrkdwn", 
+                    "text": ":apple:*Test header*"
+                }
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "section", 
+                "text": {
+                    "type": "mrkdwn", 
+                    "text": "Test block text"
+                }
+            },
+            {
+                "type": "section",
+                "fields": [
+                    {
+                        "type": "mrkdwn",
+                        "text": "*Type:*\nPaid Time Off"
+                    },
+                    {
+                        "type": "mrkdwn",
+                        "text": "*Created by:*\n<example.com|Fred Enriquez>"
+                    },
+                    {
+                        "type": "mrkdwn",
+                        "text": "*Created by:*\n<example.com|Fred Enriquez>"
+                    }
+                ]
+            },
+            {
+                "type": "context",
+                "elements": [
+                    {
+                        "type": "image",
+                        "image_url": "https://image.freepik.com/free-photo/red-drawing-pin_1156-445.jpg",
+                        "alt_text": "images"
+                    },
+                    {
+                        "type": "mrkdwn",
+                        "text": "Location: **Dogpatch**"
+                    }
+                ]
+            }
+        ],
         "attachments": [
             {
                 "fallback": "Required plain-text summary of the attachment.",
@@ -74,6 +131,11 @@ async fn test_formatted_message() {
                         "title": "Priority",
                         "value": "High",
                         "short": false
+                    },
+                    {
+                        "title": "Test",
+                        "value": "TESTSSS",
+                        "short": true
                     }
                 ],
                 "image_url": "http://my-website.com/path/to/image.jpg",
@@ -81,39 +143,6 @@ async fn test_formatted_message() {
                 "footer": "Slack API",
                 "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
                 "ts": 123456789
-            }
-        ],
-        "blocks": [
-            {
-                "type": "header",
-                "text": {
-                    "type": "plain_text",
-                    "text": "Test header"
-                }
-            },
-            {
-                "type": "divider"
-            },
-            {
-                "type": "section", 
-                "text": {
-                    "type": "mrkdwn", 
-                    "text": "Test block text"
-                }
-            },
-            {
-                "type": "context",
-                "elements": [
-                    {
-                        "type": "image",
-                        "image_url": "https://image.freepik.com/free-photo/red-drawing-pin_1156-445.jpg",
-                        "alt_text": "images"
-                    },
-                    {
-                        "type": "mrkdwn",
-                        "text": "Location: **Dogpatch**"
-                    }
-                ]
             }
         ]
     });
