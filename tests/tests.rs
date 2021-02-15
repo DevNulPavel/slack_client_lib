@@ -236,7 +236,6 @@ async fn test_image_upload() {
         .await
         .expect("Image send failed");
 
-
     // Thread
     let message = client
         .send_message("Test message", SlackChannelMessageTarget::new("#mur-test_node_upload"))

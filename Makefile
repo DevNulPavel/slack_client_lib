@@ -38,6 +38,10 @@ TEST_MESSAGES:
 	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc) && \
 	cargo test -- test_messages
 
+TEST_IMAGE: 
+	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc) && \
+	cargo test -- test_image_upload
+
 TEST_FORMATTED_MESSAGE: 
 	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc) && \
 	cargo test -- test_formatted_message
