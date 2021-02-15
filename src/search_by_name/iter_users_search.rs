@@ -64,7 +64,7 @@ pub async fn iter_by_slack_users(client: &SlackRequestBuilder,
         // Создаем список параметров
         let get_parameters: [(&str, Option<&str>); 2] = [
             //("token", Some(api_token)),
-            ("limit", Some("150")),
+            ("limit", Some("100")),
             ("cursor", last_cursor_ptr)
         ];
 

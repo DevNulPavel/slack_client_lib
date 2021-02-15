@@ -1,6 +1,7 @@
-// use log::{
-//     error
-// };
+use log::{
+    debug,
+    // error
+};
 use super::{
     user_info::{
         UserInfo
@@ -53,13 +54,15 @@ pub fn search_by_fullname(full_users_list: Vec<UserInfo>, user_lowercase: &str) 
     });*/
 
     found_users.sort_by(|val1, val2|-> std::cmp::Ordering {
-        if val1.priority < val2.priority{
+        if val1.priority > val2.priority{
             return std::cmp::Ordering::Greater;
-        } else if val1.priority > val2.priority{
+        } else if val1.priority < val2.priority{
             return std::cmp::Ordering::Less;
         }
         std::cmp::Ordering::Equal
     });
+
+    debug!("Found users sorted: {:#?}", found_users);
 
     // Вернем просто первый элемент
     return found_users

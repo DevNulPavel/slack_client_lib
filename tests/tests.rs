@@ -30,9 +30,11 @@ pub fn setup_logs() {
     static ONCE: std::sync::Once = std::sync::Once::new();
     ONCE.call_once(||{
         if std::env::var("RUST_LOG").is_err(){
-            std::env::set_var("RUST_LOG", "debug");
+            std::env::set_var("RUST_LOG", "slack_client_lib=debug");
         }
-        env_logger::builder().is_test(true).init();
+        env_logger::builder()
+            .is_test(true)
+            .init();
     })
 }
 
@@ -255,7 +257,7 @@ async fn test_image_upload() {
         .expect("Image send failed");
 }
 
-#[tokio::test]
+#[tokio::test(threaded_scheduler)]
 async fn test_find_user() {
     setup_logs();
 

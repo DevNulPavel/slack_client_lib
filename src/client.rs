@@ -526,6 +526,8 @@ impl SlackClient {
                 // Получаем список юзеров итерационно
                 let (new_cursor, mut users_list) = iter_by_slack_users(&self.request_builder, last_cursor).await;
 
+                // debug!("Received users: {:#?}", users_list);
+
                 // Нет юзеров - конец
                 if users_list.is_empty() {
                     break 'tag None;
@@ -535,7 +537,18 @@ impl SlackClient {
                 let found_info_local = users_list
                     .iter()
                     .find(|user_info|{
-                        user_info.name == user
+                        // Короткое имя совпадает?
+                        if user_info.name == user{
+                            return true;
+                        }
+
+                        // Может полное имя уже совпадает?
+                        if let Some(real_name) = &user_info.real_name {
+                            if real_name.to_lowercase().eq(&user) {
+                                return true;
+                            }
+                        }
+                        return false;
                     })
                     .map(|val| {
                         val.clone()
@@ -558,7 +571,7 @@ impl SlackClient {
                 }
             };
 
-            // Если поиск по короткому имени не отработал, пробуем по полному имени
+            // Если поиск по короткому имени не отработал, пробуем по полному имени с разделением на отдельные части
             if found_info_local.is_none(){
                 found_info_local = search_by_fullname(full_users_list, &user);
             }
