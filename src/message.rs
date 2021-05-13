@@ -76,7 +76,7 @@ impl Message {
                 ok: bool,
                 error: String
             }
-        };
+        }
 
         let data = json!({
             "channel": self.channel_id,
