@@ -27,34 +27,41 @@
 	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc)
 
 TEST: 
-	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc) && \
+	source ./test_environment.env && \
 	cargo test
 
-TEST_FIND_USER: 
-	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc) && \
+TEST_FIND_USER:
+	source ./test_environment.env && \
 	cargo test -- test_find_user
 
-TEST_MESSAGES: 
-	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc) && \
+TEST_FIND_USER_BY_EMAIL:
+	source ./test_environment.env && \
+	cargo test -- test_find_user_by_email
+
+TEST_MESSAGES:
+	source ./test_environment.env && \
 	cargo test -- test_messages
 
-TEST_IMAGE: 
-	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc) && \
+TEST_IMAGE:
+	source ./test_environment.env && \
 	cargo test -- test_image_upload
 
-TEST_FORMATTED_MESSAGE: 
-	$(shell gpg -a -r 0x0BD10E4E6E578FB6 -d test_environment.env.asc) && \
+TEST_FORMATTED_MESSAGE:
+	source ./test_environment.env && \
 	cargo test -- test_formatted_message
 
 TEST_USERS_CACHE: 
+	source ./test_environment.env && \
 	export RUST_LOG=trace && \
 	export RUST_BACKTRACE=1 && \
 	cargo test -- users_cache
 
 TEST_USERS_JSON_CACHE: 
+	source ./test_environment.env && \
 	cargo test -- test_json_cache
 
 TEST_USERS_SQLITE_CACHE: 
+	source ./test_environment.env && \
 	export RUST_LOG=trace && \
 	export RUST_BACKTRACE=1 && \
 	cargo test -- test_sqlite_cache
