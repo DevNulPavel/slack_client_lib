@@ -53,13 +53,16 @@ impl Error for UsersInMemoryCacheError{
 pub struct UsersInMemoryCache{
     data: Arc<Mutex<HashMap<String, UserInfo>>>
 }
+impl Default for UsersInMemoryCache {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl UsersInMemoryCache {
     #[allow(dead_code)]
     pub fn new() -> UsersInMemoryCache {
         // Структурка
-        UsersInMemoryCache{
-            data: Default::default()
-        }
+        UsersInMemoryCache::default()
     }
 }
 impl Clone for UsersInMemoryCache{

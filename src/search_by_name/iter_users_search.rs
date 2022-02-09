@@ -34,11 +34,7 @@ pub async fn iter_by_slack_users(client: &SlackRequestBuilder,
     // Выполняем GET запрос 
     let request_res = {
         // Создаем курсор с ссылкой
-        let last_cursor_ptr = last_cursor
-            .as_ref()
-            .map(|val|{
-                val.as_str()
-            });
+        let last_cursor_ptr = last_cursor.as_deref();
 
         /*#[derive(Deserialize, Serialize, Debug)]
         enum Parameter<'a>{
@@ -113,8 +109,8 @@ pub async fn iter_by_slack_users(client: &SlackRequestBuilder,
     // Следующий курсор
     match meta.next_cursor {
         Some(cur) => {
-            return (Some(cur), result);
+            (Some(cur), result)
         },
-        None => return (None, result),
-    };
+        None => (None, result),
+    }
 }

@@ -19,7 +19,7 @@ pub fn search_by_fullname(full_users_list: Vec<UserInfo>, user_lowercase: &str) 
     let mut found_users: Vec<UserInfoWithPriority> = Vec::new(); 
 
     let search_parts: Vec<&str> = user_lowercase.split(' ').collect();
-    for user_info in full_users_list { // Объекты будут перемещать владение в user_info        
+    for user_info in full_users_list.into_iter() { // Объекты будут перемещать владение в user_info        
         // Проверяем полное имя
         if let Some(ref real_name_src) = user_info.real_name {
             let real_name = real_name_src.to_lowercase();
@@ -54,22 +54,17 @@ pub fn search_by_fullname(full_users_list: Vec<UserInfo>, user_lowercase: &str) 
     });*/
 
     found_users.sort_by(|val1, val2|-> std::cmp::Ordering {
-        if val1.priority > val2.priority{
-            return std::cmp::Ordering::Greater;
-        } else if val1.priority < val2.priority{
-            return std::cmp::Ordering::Less;
-        }
-        std::cmp::Ordering::Equal
+        val2.priority.cmp(&val1.priority)
     });
 
     debug!("Found users sorted: {:#?}", found_users);
 
     // Вернем просто первый элемент
-    return found_users
+    found_users
         .into_iter()
         .take(1)
         .next()
-        .map(|user_info| user_info.info);
+        .map(|user_info| user_info.info)
     /*for user_info in found_users {
         return Some(user_info.info);
     }*/
@@ -109,7 +104,7 @@ pub mod tests{
         assert_eq!(search_by_fullname(test_names_vec.clone(), "user unknown").map(|val| val.id), 
                    None);
 
-        assert_eq!(search_by_fullname(test_names_vec.clone(), "unknown").map(|val| val.id), 
+        assert_eq!(search_by_fullname(test_names_vec, "unknown").map(|val| val.id), 
                    None);
     }
 }

@@ -1,3 +1,5 @@
+#![cfg(test)] // Test only shared module
+
 use std::{
     collections::{
         HashMap
@@ -40,6 +42,16 @@ pub fn generate_test_users() -> HashMap<String, UserInfo>{
         id: String::from("ggggg"),
         name: String::from("pivanov"),
         real_name: Some(String::from("Pavel Ivanov"))
+    });
+    users_cache.insert(String::from("Viktor Ershov"), UserInfo{
+        id: String::from("hgfghdfg"),
+        name: String::from("vershov"),
+        real_name: Some(String::from("Viktor Ershov"))
+    });
+    users_cache.insert(String::from("Alex Ershov"), UserInfo{
+        id: String::from("fdgdgfgd"),
+        name: String::from("aershov"),
+        real_name: Some(String::from("Alexey Ershov"))
     });
     users_cache.insert(String::from("pivanov"), UserInfo{
         id: String::from("ggggg"),

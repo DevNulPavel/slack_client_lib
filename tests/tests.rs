@@ -43,9 +43,7 @@ fn build_client() -> SlackClient{
     let slack_api_token = std::env::var("SLACK_API_TOKEN")
         .expect("SLACK_API_TOKEN environment variable is missing");
 
-    let client = SlackClient::new(Client::new(), slack_api_token);
-
-    client
+    SlackClient::new(Client::new(), slack_api_token)
 }
 
 #[tokio::test]
@@ -189,7 +187,7 @@ async fn test_messages() {
         .expect("Formatted direct message failed")
         .expect("Direct message - message object does not exist");
 
-    tokio::time::delay_for(std::time::Duration::from_secs(2)).await;
+    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
         
     message
         .update_text("New text")
@@ -230,7 +228,7 @@ async fn test_image_upload() {
     let image_data = create_qr_data("This is test text")
         .expect("Qr code create failed");
 
-    assert_eq!(image_data.len() > 0, true);
+    assert!(!image_data.is_empty());
 
     // Channel
     client
@@ -257,7 +255,7 @@ async fn test_image_upload() {
         .expect("Image send failed");
 }
 
-#[tokio::test(threaded_scheduler)]
+#[tokio::test(flavor = "multi_thread")]
 async fn test_find_user() {
     setup_logs();
 

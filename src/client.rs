@@ -325,7 +325,7 @@ impl SlackClient {
                 ok: bool
             },
             Err{
-                ok: bool,
+                #[allow(dead_code)] ok: bool,
                 error: String
             }
         }
@@ -369,7 +369,7 @@ impl SlackClient {
                 }
             },
             MessageResponse::Err{error, ..} => {
-                return Err(SlackError::Custom(error))
+                Err(SlackError::Custom(error))
             }
         }
     }
@@ -395,6 +395,7 @@ impl SlackClient {
     
         // https://api.slack.com/methods/files.upload
         #[derive(Deserialize, Debug)]
+        #[allow(dead_code)] 
         struct File{
             id: String,
             name: String,
@@ -410,7 +411,7 @@ impl SlackClient {
                 file: File
             },
             Error{
-                ok: bool,
+                #[allow(dead_code)] ok: bool,
                 error: String
             }
         }
@@ -503,7 +504,7 @@ impl SlackClient {
         let user = user_full_name.to_lowercase();
 
         // Ищем в кеше
-        if let Some(ref local_cache) = cache {
+        if let Some(local_cache) = cache {
             match local_cache.get(&user).await {
                 Ok(found) => {
                     if let Some(found) = found {
@@ -548,11 +549,9 @@ impl SlackClient {
                                 return true;
                             }
                         }
-                        return false;
+                        false
                     })
-                    .map(|val| {
-                        val.clone()
-                    });
+                    .cloned();
 
                 // Нашли - все ок
                 if found_info_local.is_some() {

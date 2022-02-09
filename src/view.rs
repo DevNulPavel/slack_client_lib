@@ -41,7 +41,7 @@ use super::{
 pub struct ViewInfo{
     id: String,
     hash: String,
-    callback_id: Option<String>,
+    //callback_id: Option<String>,
     //private_metadata: Option<String>,
     state: Option<HashMap<String, Value>>
 }
@@ -82,7 +82,7 @@ impl View {
     }
 
     pub fn get_info(&self) -> &ViewInfo{
-        return &self.info;
+        &self.info
     }
 
     pub fn set_info(&mut self, new_info: ViewInfo){
@@ -90,7 +90,7 @@ impl View {
     }
 
     pub fn get_id(&self) -> &str{
-        return self.info.get_id();
+        self.info.get_id()
     }
 
     pub async fn update_view(&mut self, view_json: Value) -> Result<(), SlackError>{

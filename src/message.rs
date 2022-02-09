@@ -26,7 +26,7 @@ use super::{
 #[derive(Deserialize, Debug)]
 pub struct MessageInfo{
     // bot_id: String,
-    text: String,
+    //text: String,
     // username: String
 }
 
@@ -58,8 +58,8 @@ impl Message {
         &self.channel_id
     }
 
+    // #[must_use = "futures do nothing unless you `.await` or poll them"]
     #[allow(dead_code)]
-    #[must_use = "futures do nothing unless you `.await` or poll them"]
     pub async fn update_text(&mut self, text: &str) -> Result<(), SlackError> {
         // https://api.slack.com/methods/chat.update#arg_ts
 
@@ -109,13 +109,13 @@ impl Message {
                     self.thread_id = ts;
                     self.channel_id = channel;
 
-                    return Ok(());
+                    Ok(())
                 }else{
                     return Err(SlackError::Custom(format!("Slack message update response: {}", ok)))
                 }
             },
             MessageResponse::Err{error, ..} => {
-                return Err(SlackError::Custom(error))
+                Err(SlackError::Custom(error))
             }
         }
     }

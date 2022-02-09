@@ -30,13 +30,12 @@ TEST:
 	source ./test_environment.env && \
 	cargo test
 
+TEST_USER_SEARCH_LOGIC:
+	cargo test -- search_by_name::full_name_search::tests::test_full_name_serach
+
 TEST_FIND_USER:
 	source ./test_environment.env && \
 	cargo test -- test_find_user
-
-TEST_FIND_USER_BY_EMAIL:
-	source ./test_environment.env && \
-	cargo test -- test_find_user_by_email
 
 TEST_MESSAGES:
 	source ./test_environment.env && \

@@ -72,9 +72,9 @@ use super::{
 //////////////////////////////////////////
 #[derive(Debug)]
 pub enum UsersSqliteCacheError{
-    IOError(io::Error),
-    PathConvertError,
-    SqliteError(sqlx::Error)
+    IO(io::Error),
+    PathConvert,
+    Sqlite(sqlx::Error)
 }
 impl Display for UsersSqliteCacheError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
@@ -85,12 +85,12 @@ impl Error for UsersSqliteCacheError{
 }
 impl From<io::Error> for UsersSqliteCacheError{
     fn from(err: io::Error) -> Self {
-        UsersSqliteCacheError::IOError(err)
+        UsersSqliteCacheError::IO(err)
     }
 }
 impl From<sqlx::Error> for UsersSqliteCacheError{
     fn from(err: sqlx::Error) -> Self {
-        UsersSqliteCacheError::SqliteError(err)
+        UsersSqliteCacheError::Sqlite(err)
     }
 }
 
@@ -109,7 +109,7 @@ impl UsersSqliteCache {
             File::create(&file_path).await?;
         }
 
-        let path_str = file_path.to_str().ok_or(UsersSqliteCacheError::PathConvertError)?;
+        let path_str = file_path.to_str().ok_or(UsersSqliteCacheError::PathConvert)?;
 
         debug!("SQLite path: {}", path_str);
 
@@ -168,7 +168,7 @@ impl UsersCache for UsersSqliteCache {
                 return Ok(Some(result));
             },
             Err(err) => {
-                return Err(Box::new(UsersSqliteCacheError::SqliteError(err)));
+                return Err(Box::new(UsersSqliteCacheError::Sqlite(err)));
             }
         }
     }
@@ -219,7 +219,7 @@ mod tests{
         *
     };
 
-    #[tokio::test(threaded_scheduler)]
+    #[tokio::test(flavor = "multi_thread")]
     async fn test_sqlite_cache(){
         setup_logs();
 

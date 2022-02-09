@@ -23,12 +23,15 @@ use serde_json::{
 
 #[derive(Deserialize, Debug)]
 pub struct ViewOpenErrorInfo{
+    #[allow(dead_code)]
     error: String,
+    #[allow(dead_code)]
     response_metadata: HashMap<String, Value>
 }
 
 #[derive(Deserialize, Debug)]
 pub struct ViewUpdateErrorInfo{
+    #[allow(dead_code)]
     error: String
 }
 
